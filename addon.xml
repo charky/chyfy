@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="script.audio.chyfy" version="1.0-alpha1" name="ChyFy" provider-name="Andre Zaske">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+    </requires>
+    <extension point="xbmc.python.script" library="chyfy.py">
+        <provides>audio</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary>ChyFy, Connect and Play Music direct from Spotify.</summary>
+        <description>ChyFy lets you search for music, browse your playlists and play your favourite tunes right from Kodi.[CR][CR]This product uses SPOTIFY(R) CORE but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.</description>
+        <disclaimer>It requires a Spotify premium account.</disclaimer>
+    </extension>
+</addon>

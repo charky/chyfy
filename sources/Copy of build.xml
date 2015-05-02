@@ -1,0 +1,33 @@
+<project name="ChyFy" default="dist" basedir=".">
+	
+	<xmlproperty file="C:\\Development\\Build\\versionreferance.xml" collapseAttributes="true" />
+
+	<property name="version" value="0.0.1" />
+	<property name="dist" location="dist\build" />
+	<property name="xbmc_project_dir" location="C:\Users\Admim\AppData\Roaming\XBMC\addons\plugin.audio.spotlight" />
+
+	<target name="dist">
+		<mkdir dir="${dist}" />
+		<copy todir="${dist}">
+			<fileset dir=".">
+				<exclude name="**/.*" />
+				<exclude name="dist/" />
+				<exclude name=".*/" />
+				<exclude name="build.xml" />
+			</fileset>
+		</copy>
+		<replaceregexp file="${dist}/addon.xml" match="SPOTLIGHT_VERSION" replace="${version}" byline="false" />
+		<zip destfile="dist/plugin.audio.spotlight-${version}.zip" basedir="dist" />
+	</target>
+
+	<target name="updatexbmc" description="Update local XBMC installation">
+		<sync todir="${xbmc_project_dir}">
+			<fileset dir="." />
+		</sync>
+	</target>
+
+	<target name="clean" description="clean up">
+		<delete dir="${dist}" />
+	</target>
+
+</project>

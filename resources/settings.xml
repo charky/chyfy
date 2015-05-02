@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<category label="Miscellaneous">
+		<setting id="misc_startup_screen" type="enum" label="Startup screen" values="New Stuff|Playlists" default="0" />
+	</category>
+</settings>
