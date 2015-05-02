@@ -1,7 +1,9 @@
 <project name="ChyFy" default="zip" basedir=".">
 	
 	<xmlproperty file="./addon.xml" />
-	<property name="buildtarget" location="./build/${addon(id)}-${addon(version)}.zip" />
+	
+	<property name="buildtempdir" location="./build/${addon(id)}-${addon(version)}" />
+	<property name="buildtarget" location="${buildtempdir}.zip" />
 	<property name="kodiaddondir" location="${user.home}/.kodi/addons/${addon(id)}" />
 	
 	<target name="clean">
@@ -9,7 +11,20 @@
 	</target>
 	
 	<target name="zip">
-		<zip destfile="${buildtarget}" excludes="*.pyc, *.pyo, sources/**, build/**, build.xml, .*, .externalToolBuilders/**" basedir="." />
+		<mkdir dir="${buildtempdir}" />
+		<copy todir="${buildtempdir}">
+			<fileset dir=".">
+				<exclude name="*.pyc" />
+				<exclude name=" *.pyo" />
+				<exclude name="sources/**" />
+				<exclude name="build/**" />
+				<exclude name="build.xml" />
+				<exclude name=".*" />
+				<exclude name=".*/**" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${buildtarget}" basedir="./build/" />
 	</target>
 	
 	<target name="unzip">
