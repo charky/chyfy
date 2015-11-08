@@ -2,9 +2,9 @@
 	
 	<xmlproperty file="./addon.xml" />
 	
-	<property name="buildtempdir" location="./build/${addon(id)}-${addon(version)}" />
-	<property name="buildtarget" location="${buildtempdir}.zip" />
-	<property name="kodiaddondir" location="${user.home}/.kodi/addons/${addon(id)}" />
+	<property name="buildtempdir" location="./build/${addon(id)}" />
+	<property name="buildtarget" location="${buildtempdir}.${addon(version)}.zip" />
+	<property name="kodiaddondir" location="${user.home}/.kodi/addons/" />
 	
 	<target name="clean">
 		<delete file="${buildtarget}" />	
@@ -13,9 +13,10 @@
 	<target name="zip">
 		<mkdir dir="${buildtempdir}" />
 		<copy todir="${buildtempdir}">
-			<fileset dir=".">
+			<fileset dir="./.">
 				<exclude name="*.pyc" />
 				<exclude name=" *.pyo" />
+				<exclude name="resources/**" />
 				<exclude name="sources/**" />
 				<exclude name="build/**" />
 				<exclude name="build.xml" />

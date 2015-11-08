@@ -1,2 +1,2 @@
 # chyfy
-Spotify Client for Kodi
+433 MHz Remote for Kodi

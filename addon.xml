@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<addon id="plugin.audio.chyfy" version="1.0.0" name="ChyFy" provider-name="Andre Zaske">
+<addon id="script.chyfy" version="1.0.0" name="ChyFy" provider-name="Charky">
     <requires>
         <import addon="xbmc.python" version="2.1.0" />
     </requires>
-	<extension point="xbmc.python.pluginsource" library="chyfy.py">
-		<provides>audio</provides>
+	<extension point="xbmc.python.script" library="chyfy.py">
+		<provides>executable</provides>
 	</extension>
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
-        <summary>ChyFy, let you stream Spotify directly to Kodi</summary>
-        <description>ChyFy lets you stream your favourite tunes from an Spotify client directly to Kodi.</description>
-        <license></license>
+        <summary>Control 433mhz wireless socket from Kodi</summary>
+        <description>Control 433mhz wireless socket using Kodi with OpenElec on Raspberry Pi 2</description>
+        <license>GNU GPL</license>
         <language></language>
 	    <forum></forum>
 	    <website></website>

@@ -1,5 +1,5 @@
 '''
-Copyright 2015 Andre Zaske
+Copyright 2015 Charky
 
 This file is part of ChyFy.
 
@@ -17,17 +17,45 @@ You should have received a copy of the GNU General Public License
 along with ChyFy.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import os
 import sys
-import xbmcgui
-import xbmcplugin
+import xbmc
+import urlparse
+from xbmcgui import Dialog
 
-addon_handle = int(sys.argv[1])
+_appName = "ChyFy"
+_wsControlLabels = ["WS A On","WS A Off","WS B On","WS B Off","WS C On","WS C Off"]
 
-xbmcplugin.setContent(addon_handle, 'audios')
+def ws_control(wsID,powerState):
+    #os.system("bash /home/charky/runIt.sh 11101 "+wsID+" "+powerState)
+    os.system("sh /storage/sendWS.sh 11101 "+wsID+" "+powerState)
+    xbmc.log(msg="wsID="+wsID+" powerState="+powerState, level=xbmc.LOGDEBUG)
 
-url = 'http://localhost/some_video.mkv'
-li = xbmcgui.ListItem('My First Video!', iconImage='DefaultAudio.png')
-xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
+def main():
+    ## main loop ##
+    confirm_discard = False
+    while True:
+        idx = Dialog().select(_appName, _wsControlLabels)
+        xbmc.log(msg=_wsControlLabels[idx], level=xbmc.LOGDEBUG)  
+        if idx >= 0 and idx <= 5:
+            wsID = str(idx / 2 + 1)
+            powerState = "0"
+            if idx % 2 == 0:
+                powerState = "1"
+            ws_control(wsID,powerState)
+        elif idx == -1 and confirm_discard:
+            if Dialog().yesno(_appName, "Quit?") == 1:
+                break
+        else:
+            break
+        
+    sys.modules.clear()
 
-xbmcplugin.endOfDirectory(addon_handle)
- 
+if __name__ == "__main__":
+    if len(sys.argv) > 1: 
+        params = urlparse.parse_qs('&'.join(sys.argv[1:]))
+        if params.has_key("wsID") and params.has_key("powerState"):
+            ws_control(params["wsID"][0], params["powerState"][0])
+        
+    else:
+        main()
