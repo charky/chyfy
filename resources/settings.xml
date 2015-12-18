@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-	<category label="Miscellaneous">
-		<setting id="misc_startup_screen" type="enum" label="Startup screen" values="New Stuff|Playlists" default="0" />
+	<category label="Bluetooth Mi-Band availability sensitive Lightning">
+			<setting id="service_enabled" type="bool" label="Service is enabled" default="true"/>
+		<setting label="Toggle Service" type="action" action=" RunPlugin(plugin://script.chyfy?action=service)" />
 	</category>
 </settings>

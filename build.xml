@@ -7,7 +7,9 @@
 	<property name="kodiaddondir" location="${user.home}/.kodi/addons/" />
 	
 	<target name="clean">
-		<delete file="${buildtarget}" />	
+		<delete>
+			<fileset dir="./build" includes="**/*.zip"/>
+		</delete>
 	</target>
 	
 	<target name="zip">

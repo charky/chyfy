@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<addon id="script.chyfy" version="1.0.0" name="ChyFy" provider-name="Charky">
+<addon id="script.chyfy" version="1.0.1" name="ChyFy" provider-name="Charky">
     <requires>
         <import addon="xbmc.python" version="2.1.0" />
     </requires>
+    <extension point="xbmc.service" library="service.py" start="login" />
 	<extension point="xbmc.python.script" library="chyfy.py">
 		<provides>executable</provides>
 	</extension>
