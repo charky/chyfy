@@ -1,9 +1,11 @@
 <project name="ChyFy" default="zip" basedir=".">
 	
 	<xmlproperty file="./addon.xml" />
+	<property file="build_info.properties"/>
 	
+	<property name="build.number" value="${build.major.number}.${build.minor.number}.${build.revision.number}"/>
 	<property name="buildtempdir" location="./build/${addon(id)}" />
-	<property name="buildtarget" location="${buildtempdir}.${addon(version)}.zip" />
+	<property name="buildtarget" location="${buildtempdir}.${build.number}.zip" />
 	<property name="kodiaddondir" location="${user.home}/.kodi/addons/" />
 	
 	<target name="clean">
@@ -13,19 +15,34 @@
 	</target>
 	
 	<target name="zip">
+		<propertyfile  file="build_info.properties">
+			<entry key="build.revision.number" type="int" operation="+" value="1" pattern="0"/>
+		</propertyfile>
+
 		<mkdir dir="${buildtempdir}" />
 		<copy todir="${buildtempdir}">
 			<fileset dir="./.">
 				<exclude name="*.pyc" />
 				<exclude name=" *.pyo" />
-				<exclude name="resources/**" />
+				<!-- <exclude name="resources/**" /> -->
 				<exclude name="sources/**" />
 				<exclude name="build/**" />
 				<exclude name="build.xml" />
 				<exclude name=".*" />
+				<exclude name="addon.xml" />
+				<exclude name="build_info.properties" />
 				<exclude name=".*/**" />
 			</fileset>
 		</copy>
+		
+		<copy file="addon.xml" tofile="${buildtempdir}\addon.xml"       
+			    filtering="yes" overwrite="yes">
+			    <filterchain>
+			        <tokenfilter>
+			            <replaceregex pattern="addon version=&quot;[0-9.]*&quot;" replace="addon version=&quot;${build.number}&quot;"/>
+			        </tokenfilter>
+			    </filterchain>
+			</copy>
 		
 		<zip destfile="${buildtarget}" basedir="./build/" />
 	</target>

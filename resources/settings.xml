@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-	<category label="Bluetooth Mi-Band availability sensitive Lightning">
-			<setting id="service_enabled" type="bool" label="Service is enabled" default="true"/>
-		<setting label="Toggle Service" type="action" action=" RunPlugin(plugin://script.chyfy?action=service)" />
+	<category label="General">
+		<setting label="Service is enabled" type="bool"  id="service_enabled" default="true"/>
+		<setting label="Bluetooth Refresh (sec.)" type="slider" id="waiting_time" default="5" range="2,1,60" option="int" />
+		<setting label="Service Sleeping Time (min.)" type="slider" id="sleep_time" default="5" range="1,1,60" option="int" />
+		<setting label="Signal Strength Indicator (RSSI)" type="slider" id="rssi" default="-85" range="-100,1,0" option="int" />
+	</category>
+	<category label="WS Names">
+		<setting label="Names:" type="lsep"/>
+		<setting label="Wireless Switch 1" type="text" id="ws_1_name" default="WS A" />
+		<setting label="Wireless Switch 2" type="text" id="ws_2_name" default="WS B" />
+		<setting label="Wireless Switch 3" type="text" id="ws_3_name" default="WS C" />
+		<setting label="Trigger Auto On:" type="lsep"/>
+		<setting label="WS 1 Auto On" type="bool" id="ws_1_auto_on" default="false"/>
+		<setting label="WS 2 Auto On" type="bool" id="ws_2_auto_on" default="false"/>
+		<setting label="WS 3 Auto On" type="bool" id="ws_3_auto_on" default="false"/>
+		<setting label="Trigger Auto Off:" type="lsep"/>
+		<setting label="WS 1 Auto Off" type="bool" id="ws_1_auto_off" default="false"/>
+		<setting label="WS 2 Auto Off" type="bool" id="ws_2_auto_off" default="false"/>
+		<setting label="WS 3 Auto Off" type="bool" id="ws_3_auto_off" default="false"/>
+	</category>
+	<category label="Media Control">
+		<setting label="Auto Play" type="bool" id="mc_auto_play" default="false"/>
+		<setting label="Auto Pause" type="bool" id="mc_auto_pause" default="false"/>
+	</category>
+	<category label="BT Devices">
+		<setting label="Number of Devices" type="enum" id="bt_numbers" values="1 Device|2 Devices|3 Devices|4 Devices|5 Devices" default="0"/>
+		<setting label="Name or MAC of" type="lsep"/>
+		<setting label="BT Device 1" type="text" id="bt_1_name" default="88:0F:10:64:55:FA" />
+		<setting label="BT Device 2" type="text" id="bt_2_name" default="Mi" visible="gt(-3,0)" />
+		<setting label="BT Device 3" type="text" id="bt_3_name" default="Mi" visible="gt(-4,1)" />
+		<setting label="BT Device 4" type="text" id="bt_4_name" default="Mi" visible="gt(-5,2)" />
+		<setting label="BT Device 5" type="text" id="bt_5_name" default="Mi" visible="gt(-6,3)" />
 	</category>
 </settings>
