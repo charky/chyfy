@@ -2,9 +2,13 @@
 <settings>
 	<category label="General">
 		<setting label="Service is enabled" type="bool"  id="service_enabled" default="true"/>
+		<setting label="Wirless Switch Code" type="text" id="ws_code" default="11101" />
 		<setting label="Bluetooth Refresh (sec.)" type="slider" id="waiting_time" default="5" range="2,1,60" option="int" />
 		<setting label="Service Sleeping Time (min.)" type="slider" id="sleep_time" default="5" range="1,1,60" option="int" />
 		<setting label="Signal Strength Indicator (RSSI)" type="slider" id="rssi" default="-85" range="-100,1,0" option="int" />
+		<setting label="Use Active Time Inteval" type="bool"  id="use_time_interval" default="false"/>
+		<setting label="Start Time" type="time" id="start_time" default="18:00" visible="eq(-1,true)" />
+		<setting label="End Time" type="time" id="end_time" default="23:00" visible="eq(-2,true)" />
 	</category>
 	<category label="WS Names">
 		<setting label="Names:" type="lsep"/>
@@ -32,5 +36,12 @@
 		<setting label="BT Device 3" type="text" id="bt_3_name" default="Mi" visible="gt(-4,1)" />
 		<setting label="BT Device 4" type="text" id="bt_4_name" default="Mi" visible="gt(-5,2)" />
 		<setting label="BT Device 5" type="text" id="bt_5_name" default="Mi" visible="gt(-6,3)" />
+	</category>
+	<category label="Leaving Room">
+		<setting label="Activate Leaving Room" type="bool"  id="enable_leaving" default="false"/>
+		<setting label="Leaving State" type="bool"  id="room_leaved" default="false"/>
+		<setting label="Leaving Room Time (sec.)" type="slider" id="leaving_time" default="30" range="2,1,120" option="int" />
+		<setting label="Returning Room Time (sec.)" type="slider" id="returning_time" default="30" range="2,1,120" option="int" />
+		<setting label="Time-Out (min.)" type="slider" id="timeout_time" default="1" range="2,1,10" option="int" />
 	</category>
 </settings>

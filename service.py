@@ -1,7 +1,12 @@
-import time
+from datetime import datetime
 import os
-import xbmc
-import xbmcaddon
+import xbmc, xbmcaddon
+
+# Load Libs
+__addon__    = xbmcaddon.Addon()
+__cwd__      = __addon__.getAddonInfo('path').decode("utf-8")
+__resource__ = xbmc.translatePath( os.path.join( __cwd__, 'resources', 'lib' ).encode("utf-8") ).decode("utf-8")
+sys.path.append(__resource__)
 
 from bluetooth import Bluetooth
 import actions
@@ -22,7 +27,21 @@ class Service:
     def run(self):
         while not self.monitor.abortRequested():
             waitForTime = 5
-            if self.addon.getSetting("service_enabled") == "true":
+            
+            timeIntervalHit = True
+            
+            if self.addon.getSetting("use_time_interval") == "true":
+                startTime = datetime.strptime(self.addon.getSetting("start_time"), '%H:%M').time()   
+                endTime = datetime.strptime(self.addon.getSetting("end_time"), '%H:%M').time()
+                currentTime = datetime.now().time()
+                if currentTime >= startTime and currentTime <= endTime:
+                    timeIntervalHit = True
+                    xbmc.log("ChyFy::service.py - Time Interval Hit", level=xbmc.LOGDEBUG)
+                else:
+                    timeIntervalHit = False
+                    xbmc.log("ChyFy::service.py - Current Time not in Time Interval", level=xbmc.LOGDEBUG)
+                
+            if self.addon.getSetting("service_enabled") == "true" and timeIntervalHit:
                 self.startDiscovery()
                 waitForTime = int(self.addon.getSetting("waiting_time")) + self.delayToggle
                 self.delayToggle = 0
@@ -59,8 +78,8 @@ class Service:
                  if 'Name' in dbusDevices[key]:
                     devName = dbusDevices[key]['Name']
                     devAddress = dbusDevices[key]['Address']
-                    devRSSI = dbusDevices[key]['RSSI']
-                    xbmc.log("Bluetooth: %s -> %s (%s)" % (key, devName,devRSSI), level=xbmc.LOGDEBUG)
+                    devRSSI = int(dbusDevices[key]['RSSI'])
+                    xbmc.log("Bluetooth: %s -> %s (%s >= %s)" % (key, devName, devRSSI, rssiSensity), level=xbmc.LOGDEBUG)
                     if (devName in device_names or devAddress in device_names) and devRSSI >= rssiSensity:
                         xbmc.log("ChyFy::service.py - Device was found: %s" % devName, level=xbmc.LOGDEBUG)
                         deviceFound=True
