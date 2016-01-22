@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.charky.kodi" name="Charkys repository" version="0.0.1" provider-name="Charky">
+	<extension point="xbmc.addon.repository" name="Charkys Add-on Repository">
+		<info compressed="false">http://upepper:8080/addons.xml</info>
+		<checksum>http://upepper:8080/addons.xml.md5</checksum>
+		<datadir zip="true">http://upepper:8080/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Charkys Repro</summary>
+		<description>Addon Description</description>
+		<disclaimer>Only for use by Chy</disclaimer>
+		<platform>all</platform>
+	</extension>
+</addon>

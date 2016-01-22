@@ -17,13 +17,13 @@ class Service:
     def __init__(self):
         self.monitor = xbmc.Monitor()
         self.player = xbmc.Player()
-        self.addon = xbmcaddon.Addon()
+        self.addon = __addon__
         self.blue = Bluetooth()
         self.lightIsON=False
         self.deviceFound=False
         self.discoveryIsOn=False
         self.delayToggle = 0
-        
+
     def run(self):
         while not self.monitor.abortRequested():
             waitForTime = 5
@@ -128,5 +128,5 @@ class Service:
 #
 ##
 if __name__ == '__main__':
-    service = Service()
-    service.run()
+    Service().run()
+    
