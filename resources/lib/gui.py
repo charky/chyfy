@@ -52,6 +52,8 @@ class GUI:
                 self.actions.ws_control(wsID,powerState)
             elif idx == 7:
                 self.toggleService()
+            elif idx == 8:
+                self.actions.start_settings_server()
             elif idx == -1:
                 break
             else:

@@ -1,7 +1,11 @@
-import os, sys, urlparse, BaseHTTPServer
+import os, sys, platform, urlparse, BaseHTTPServer
 import xbmc, xbmcaddon
 
-from remoteswitch import RemoteSwitch
+runningOnRaspberry = False
+if platform.machine().startswith("armv7"):
+    from remoteswitch import RemoteSwitch
+    runningOnRaspberry = True
+
 from settings import Settings
 
 settings = Settings()
@@ -33,21 +37,28 @@ class Actions:
         ## Load Config RemoteSwitch Key
         ws_code = settings.general["ws_code"]
         
+        # devices: A = 1, B = 2, C = 4, D = 8, E = 16
+        # Corrections  
+        if wsID == "3" :
+            wsID = "4"
         
         # change the pin according to your wiring (Raspberry)
         default_pin = 17
+        # Only do some Actions on Raspberry
+        if runningOnRaspberry:
+            device = RemoteSwitch(  
+                device= int(wsID), 
+                key=map(int, list(ws_code)), 
+                pin=default_pin
+            )
         
-        device = RemoteSwitch(  
-            device= int(wsID), 
-            key=map(int, list(ws_code)), 
-            pin=default_pin
-        )
-    
-        if int(powerState):
-            device.switchOn()
-        else: 
-            device.switchOff()
-        xbmc.log(msg="ChyFy::action.py::ws_control() - wsID="+wsID+" powerState="+powerState, level=xbmc.LOGDEBUG)
+            if int(powerState):
+                device.switchOn()
+            else: 
+                device.switchOff()
+            xbmc.log(msg="ChyFy::action.py - ws_control() - wsID="+wsID+" powerState="+powerState, level=xbmc.LOGDEBUG)
+        else:
+            xbmc.log(msg="ChyFy::action.py - ws_control() - NOT on Raspberry wsID="+wsID+" powerState="+powerState, level=xbmc.LOGDEBUG)
     
     def app_enable_leaving_room(value):
         if (value):

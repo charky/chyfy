@@ -8,6 +8,10 @@
 	<property name="buildtarget" location="${buildtempdir}-${build.number}.zip" />
 	<property name="kodiaddondir" location="${user.home}/.kodi/addons/" />
 	
+ 	<property name="kodideactive" value="http://localhost:8090/jsonrpc?request=%7B%20%22jsonrpc%22%3A%20%222.0%22%2C%20%22method%22%3A%20%22Addons.SetAddonEnabled%22%2C%20%22params%22%3A%20%7B%22addonid%22%3A%20%22script.chyfy%22%2C%20%22enabled%22%3A%20false%7D%2C%20%22id%22%3A%201%20%7D"/>
+	<property name="kodiactive" value="http://localhost:8090/jsonrpc?request=%7B%20%22jsonrpc%22%3A%20%222.0%22%2C%20%22method%22%3A%20%22Addons.SetAddonEnabled%22%2C%20%22params%22%3A%20%7B%22addonid%22%3A%20%22script.chyfy%22%2C%20%22enabled%22%3A%20true%7D%2C%20%22id%22%3A%201%20%7D"/>
+
+	
 	
 	<!-- create macrodef -->
 	<macrodef name="decrement">
@@ -67,7 +71,15 @@
 	</target>
 	
 	<target name="unzip" depends="getpresentbuildtarget">
+		<property name="logfile" location="./build/kodi_log" />
+		<get src="${kodideactive}" dest="${logfile}" quiet="true" />
+		<loadfile property="kodilog1" srcFile="${logfile}" />
+		<echo message="${kodilog1}" />
 		<unzip src="${buildtargetlocal}" dest="${kodiaddondir}" overwrite="true" />
+		<get src="${kodiactive}" dest="${logfile}" quiet="true" />
+		<loadfile property="kodilog2" srcFile="${logfile}" />
+		<echo message="${kodilog2}" />
+		<delete file="${logfile}" />
 	</target>
 	
 	<target name="getpresentbuildtarget" description="Generates the present buildnumbers and target">

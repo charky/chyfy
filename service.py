@@ -1,5 +1,4 @@
-import time
-import os
+import time, os
 import xbmc, xbmcaddon
 
 # Load Libs
@@ -18,7 +17,7 @@ settings = Settings()
 class Service:
     
     def __init__(self):
-        self.monitor = CE_Monitor()
+        self.monitor = CE_Monitor(self)
         self.player = xbmc.Player()
         self.actions = Actions()
         self.blue = Bluetooth()
@@ -53,12 +52,16 @@ class Service:
                 #SleepTime in Minutes
                 waitForTime = settings.general["sleep_time"]        
             # Sleep/wait for abort for $waitForTime seconds
+            xbmc.log("ChyFy::service.py - Start waiting for %d seconds" % waitForTime, level=xbmc.LOGDEBUG)
             if self.monitor.waitForAbort(waitForTime):
                 # Abort was requested while waiting. We should exit
                 break
-            xbmc.log("ChyFy::service.py - Run after wait for %d seconds" % waitForTime, level=xbmc.LOGDEBUG)
+            xbmc.log("ChyFy::service.py - Run after wait", level=xbmc.LOGDEBUG)
             if self.discoveryIsOn:
                 self.scan()
+                xbmc.log("ChyFy::service.py - discovery is on", level=xbmc.LOGDEBUG)
+            else:
+                xbmc.log("ChyFy::service.py - discovery is off", level=xbmc.LOGDEBUG)
                 
     def scan(self):
         dbusDevices = self.blue.get_devices()
@@ -82,7 +85,7 @@ class Service:
                     devName = dbusDevices[key]['Name']
                     devAddress = dbusDevices[key]['Address']
                     devRSSI = int(dbusDevices[key]['RSSI'])
-                    xbmc.log("Bluetooth: %s -> %s (%s >= %s)" % (key, devName, devRSSI, rssiSensity), level=xbmc.LOGDEBUG)
+                    xbmc.log("ChyFy::service.py - Device: %s -> %s (%s >= %s)" % (key, devName, devRSSI, rssiSensity), level=xbmc.LOGDEBUG)
                     if (devName in device_names or devAddress in device_names) and devRSSI >= rssiSensity:
                         xbmc.log("ChyFy::service.py - Device was found: %s" % devName, level=xbmc.LOGDEBUG)
                         deviceFound=True
@@ -126,14 +129,21 @@ class Service:
             self.discoveryIsOn = False
 
 class CE_Monitor( xbmc.Monitor ):
+    def __init__(self, service):
+        xbmc.Monitor.__init__(self)
+        self.service = service
     def onSettingsChanged(self):
-        settings.setup()
-            
+        settings.update()
+        xbmc.log("ChyFy::service.py - onSettingsChanged - ServiceEnabled = %s" % settings.general["service_enabled"], level=xbmc.LOGNOTICE)
+        
+        
 ##
 #
 #Init Service and Run
 #
 ##
 if __name__ == '__main__':
+    xbmc.log("ChyFy::service.py - Main Service starting", level=xbmc.LOGNOTICE)
     Service().run()
+    xbmc.log("ChyFy::service.py - Main Service stopped", level=xbmc.LOGNOTICE)
     

@@ -1,7 +1,6 @@
 #!/usr/bin/python
-import sys
+import sys, time
 import RPi.GPIO as GPIO
-import time
 
 
 class RemoteSwitch(object):
