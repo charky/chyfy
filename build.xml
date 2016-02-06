@@ -27,11 +27,12 @@
 		</delete>
 	</target>
 	
-	<target name="zip">
+	<target name="incrementbuild">
 		<propertyfile  file="build_info.properties">
 			<entry key="build.revision.number" type="int" operation="+" value="1" pattern="0"/>
 		</propertyfile>
-
+	</target>
+	<target name="zip">
 		<mkdir dir="${buildtempdir}" />
 		<copy todir="${buildtempdir}">
 			<fileset dir="./.">
@@ -65,14 +66,14 @@
 		</zip>
 	</target>
 	
-	<target name="unzip">
-		<unzip src="${buildtarget}" dest="${kodiaddondir}" overwrite="true" />
+	<target name="unzip" depends="getpresentbuildtarget">
+		<unzip src="${buildtargetlocal}" dest="${kodiaddondir}" overwrite="true" />
 	</target>
 	
 	<target name="getpresentbuildtarget" description="Generates the present buildnumbers and target">
 		<decrement result="buildrevminus" value="${build.revision.number}" />
 		<property name="buildlocal" value="${build.major.number}.${build.minor.number}.${buildrevminus}"/>
-		<property name="buildtargetlocal" location="${buildtempdir}.${buildlocal}.zip" />
+		<property name="buildtargetlocal" location="${buildtempdir}-${buildlocal}.zip" />
 	</target>
 	
 	<target name="kodipush" description="Push zip throw Kodi" depends="getpresentbuildtarget">
@@ -92,7 +93,7 @@
 		<echo file="./build/repro/addons.xml" append="true" message="${file}${line.separator}" />
 		<echo file="./build/repro/addons.xml" append="true" message="&lt;/addons&gt;${line.separator}" />
 		<checksum file="./build/repro/addons.xml" property="addonMD5"/>
-		<echo file="./build/repro/addons.xml.md5" append="true" message="${addonMD5}" />
+		<echo file="./build/repro/addons.xml.md5" append="false" message="${addonMD5}" />
 	</target>
 			
 </project>

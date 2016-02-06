@@ -26,14 +26,12 @@ __cwd__      = __addon__.getAddonInfo('path').decode("utf-8")
 __resource__ = xbmc.translatePath( os.path.join( __cwd__, 'resources', 'lib' ).encode("utf-8") ).decode("utf-8")
 sys.path.append(__resource__)
 
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         # Import Actions
-        import actions
-         
-        params = urlparse.parse_qs('&'.join(sys.argv[1:]))
-        if params.has_key("wsID") and params.has_key("powerState"):
-            actions.ws_control(params["wsID"][0], params["powerState"][0])
+        from actions import Actions
+        Actions().doAction(sys.argv)
     else:
         # Import GUI
         from gui import GUI

@@ -18,9 +18,10 @@ class RemoteSwitch(object):
         self.pin = pin 
         self.key = key
         self.device = device
+        GPIO.setwarnings(False)
         GPIO.setmode(self.GPIOMode)
         GPIO.setup(self.pin, GPIO.OUT)
-        GPIO.setwarnings(False)
+        
         
     def switchOn(self):
         self._switch(GPIO.HIGH)

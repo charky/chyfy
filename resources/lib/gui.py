@@ -3,7 +3,10 @@ import xbmc
 import xbmcaddon
 from xbmcgui import Dialog
 
-import actions
+from actions import Actions
+from settings import Settings
+
+settings = Settings()
 
 ##### Variables #####
 addon     = xbmcaddon.Addon()
@@ -13,25 +16,28 @@ class GUI:
     
     def __init__(self):
        self.wsControlLabels = []
-       self.wsControlLabels.append(addon.getSetting("ws_1_name").strip() + " On")
-       self.wsControlLabels.append(addon.getSetting("ws_1_name").strip() + " Off")
-       self.wsControlLabels.append(addon.getSetting("ws_2_name").strip() + " On")
-       self.wsControlLabels.append(addon.getSetting("ws_2_name").strip() + " Off")
-       self.wsControlLabels.append(addon.getSetting("ws_3_name").strip() + " On")
-       self.wsControlLabels.append(addon.getSetting("ws_3_name").strip() + " Off")
+       self.wsControlLabels.append(settings.wireless_switch["ws_1_name"] + " On")
+       self.wsControlLabels.append(settings.wireless_switch["ws_1_name"] + " Off")
+       self.wsControlLabels.append(settings.wireless_switch["ws_2_name"] + " On")
+       self.wsControlLabels.append(settings.wireless_switch["ws_2_name"] + " Off")
+       self.wsControlLabels.append(settings.wireless_switch["ws_3_name"] + " On")
+       self.wsControlLabels.append(settings.wireless_switch["ws_3_name"] + " Off")
        self.wsControlLabels.append("- - -")
        self.wsControlLabels.append("Toggle Service on/off")
+       self.actions = Actions()
      
     def toggleService(self):
-        if addon.getSetting("service_enabled") == "true":
-            addon.setSetting("service_enabled", "false")
+        settings.update_general()
+        if settings.general["service_enabled"]:
+            settings.set("service_enabled", "false")
         else:
-            addon.setSetting("service_enabled", "true")
+            settings.set("service_enabled", "true")
+        settings.update_general()    
        
     def show(self):    
         ## main loop ##
         while True:
-            if addon.getSetting("service_enabled") == "true":
+            if settings.general["service_enabled"]:
                 self.wsControlLabels[7] = "Disable Service"
             else:
                 self.wsControlLabels[7] = "Enable Service"
@@ -43,7 +49,7 @@ class GUI:
                 powerState = "0"
                 if idx % 2 == 0:
                     powerState = "1"
-                actions.ws_control(wsID,powerState)
+                self.actions.ws_control(wsID,powerState)
             elif idx == 7:
                 self.toggleService()
             elif idx == -1:

@@ -44,4 +44,6 @@
 		<setting label="Returning Room Time (sec.)" type="slider" id="returning_time" default="30" range="2,1,120" option="int" />
 		<setting label="Time-Out (min.)" type="slider" id="timeout_time" default="1" range="2,1,10" option="int" />
 	</category>
+	<category label="States">
+	</category>
 </settings>

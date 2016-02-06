@@ -1,4 +1,4 @@
-from datetime import datetime
+import time
 import os
 import xbmc, xbmcaddon
 
@@ -8,16 +8,19 @@ __cwd__      = __addon__.getAddonInfo('path').decode("utf-8")
 __resource__ = xbmc.translatePath( os.path.join( __cwd__, 'resources', 'lib' ).encode("utf-8") ).decode("utf-8")
 sys.path.append(__resource__)
 
+from actions import Actions
 from bluetooth import Bluetooth
-import actions
+from settings import Settings
 
+
+settings = Settings()
 
 class Service:
     
     def __init__(self):
-        self.monitor = xbmc.Monitor()
+        self.monitor = CE_Monitor()
         self.player = xbmc.Player()
-        self.addon = __addon__
+        self.actions = Actions()
         self.blue = Bluetooth()
         self.lightIsON=False
         self.deviceFound=False
@@ -30,10 +33,10 @@ class Service:
             
             timeIntervalHit = True
             
-            if self.addon.getSetting("use_time_interval") == "true":
-                startTime = datetime.strptime(self.addon.getSetting("start_time"), '%H:%M').time()   
-                endTime = datetime.strptime(self.addon.getSetting("end_time"), '%H:%M').time()
-                currentTime = datetime.now().time()
+            if settings.general["use_time_interval"]:
+                startTime = settings.general["start_time"]   
+                endTime = settings.general["end_time"]
+                currentTime = time.localtime()
                 if currentTime >= startTime and currentTime <= endTime:
                     timeIntervalHit = True
                     xbmc.log("ChyFy::service.py - Time Interval Hit", level=xbmc.LOGDEBUG)
@@ -41,14 +44,14 @@ class Service:
                     timeIntervalHit = False
                     xbmc.log("ChyFy::service.py - Current Time not in Time Interval", level=xbmc.LOGDEBUG)
                 
-            if self.addon.getSetting("service_enabled") == "true" and timeIntervalHit:
+            if settings.general["service_enabled"] and timeIntervalHit:
                 self.startDiscovery()
-                waitForTime = int(self.addon.getSetting("waiting_time")) + self.delayToggle
+                waitForTime = settings.general["waiting_time"] + self.delayToggle
                 self.delayToggle = 0
             else:
                 self.stopDiscovery()
                 #SleepTime in Minutes
-                waitForTime = int(self.addon.getSetting("sleep_time")) * 60        
+                waitForTime = settings.general["sleep_time"]        
             # Sleep/wait for abort for $waitForTime seconds
             if self.monitor.waitForAbort(waitForTime):
                 # Abort was requested while waiting. We should exit
@@ -63,16 +66,16 @@ class Service:
         if dbusDevices is not None:
             deviceFound=False
             
-            rssiSensity = int(self.addon.getSetting("rssi"))
+            rssiSensity = settings.general["rssi"]
             
             #Get Devices
             device_names = []
-            device_names.append(self.addon.getSetting("bt_1_name"))
+            device_names.append(settings.bt_devices["bt_1_name"])
             
-            device_numbers = int(self.addon.getSetting("bt_numbers")) + 1
+            device_numbers = settings.bt_devices["bt_numbers"]
             if device_numbers > 1:
                 for i in range(2,device_numbers):
-                    device_names.append(self.addon.getSetting("bt_"+i+"_name"))
+                    device_names.append(settings.bt_devices["bt_"+i+"_name"])
             
             for key in dbusDevices:
                  if 'Name' in dbusDevices[key]:
@@ -94,9 +97,9 @@ class Service:
     def handle_device_found(self):
         if not self.lightIsON:
             for i in range(1,4):
-                if self.addon.getSetting("ws_"+str(i)+"_auto_on") == "true":
-                    actions.ws_control(str(i), "1")
-            if self.addon.getSetting("mc_auto_play") == "true" and not self.player.isPlaying():
+                if settings.wireless_switch["ws_"+str(i)+"_auto_on"]:
+                    self.actions.ws_control(str(i), "1")
+            if settings.media_control["mc_auto_play"] and not self.player.isPlaying():
                 self.player.pause()
             self.delayToggle = 30
             self.lightIsON=True
@@ -104,9 +107,9 @@ class Service:
     def handle_device_notfound(self):
         if self.lightIsON:
             for i in range(1,4):
-                if self.addon.getSetting("ws_"+str(i)+"_auto_off") == "true":
-                    actions.ws_control(str(i), "0")
-            if self.addon.getSetting("mc_auto_pause") == "true" and self.player.isPlaying():
+                if settings.wireless_switch["ws_"+str(i)+"_auto_off"]:
+                    self.actions.ws_control(str(i), "0")
+            if settings.media_control["mc_auto_pause"] and self.player.isPlaying():
                 self.player.pause()
             self.lightIsON=False
             
@@ -121,6 +124,10 @@ class Service:
             self.blue.stop_discovery()
             self.blue.stop_service()
             self.discoveryIsOn = False
+
+class CE_Monitor( xbmc.Monitor ):
+    def onSettingsChanged(self):
+        settings.setup()
             
 ##
 #
